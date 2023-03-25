@@ -5,17 +5,14 @@
     <script type="text/javascript">
         function updateEarnings() {
             var salary = {{ salary }};
-            var earningsPerSecond = salary / 12 / 2 / 80 / 3600; // 365 days * 24 hours * 60 minutes * 60 seconds
-            var timeElapsed = (Date.now() - startTime) / 1000;
-            var earnings = earningsPerSecond * timeElapsed;
-            document.getElementById('time').innerHTML = formatTime(timeElapsed);
-            document.getElementById('earnings').innerHTML = formatMoney(earnings);
-        }
-
-        function formatTime(seconds) {
-            var minutes = Math.floor(seconds / 60);
-            var remainingSeconds = Math.round(seconds % 60);
-            return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+            var elapsed_time = (Date.now() - startTime) / 1000;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/earnings?salary=' + salary + '&elapsed_time=' + elapsed_time);
+            xhr.onload = function() {
+                var earnings = JSON.parse(xhr.responseText).earnings;
+                document.getElementById('earnings').innerHTML = formatMoney(earnings);
+            };
+            xhr.send();
         }
 
         function formatMoney(amount) {
@@ -36,7 +33,6 @@
 
     {% if salary %}
     <div>
-        <p>Time: <span id="time">0:00</span></p>
         <p>You have made: <span id="earnings">$0.00</span></p>
     </div>
     {% endif %}
