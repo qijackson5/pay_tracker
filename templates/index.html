@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earnings Calculator</title>
+    <script type="text/javascript">
+        function updateEarnings() {
+            var salary = {{ salary }};
+            var earningsPerSecond = salary / 12 / 2 / 80 / 3600; // 365 days * 24 hours * 60 minutes * 60 seconds
+            var timeElapsed = (Date.now() - startTime) / 1000;
+            var earnings = earningsPerSecond * timeElapsed;
+            document.getElementById('time').innerHTML = formatTime(timeElapsed);
+            document.getElementById('earnings').innerHTML = formatMoney(earnings);
+        }
+
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            var remainingSeconds = Math.round(seconds % 60);
+            return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+        }
+
+        function formatMoney(amount) {
+            return '$' + amount.toFixed(2);
+        }
+
+        var startTime = Date.now();
+        setInterval(updateEarnings, 1000);
+    </script>
+</head>
+<body>
+    <h1>Earnings Calculator</h1>
+    <form method="POST">
+        <label for="salary">Enter your salary:</label>
+        <input type="number" id="salary" name="salary" step="any" required>
+        <button type="submit">Calculate</button>
+    </form>
+
+    {% if salary %}
+    <div>
+        <p>Time: <span id="time">0:00</span></p>
+        <p>You have made: <span id="earnings">$0.00</span></p>
+    </div>
+    {% endif %}
+</body>
+</html>
