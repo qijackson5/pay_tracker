@@ -11,8 +11,15 @@
             xhr.onload = function() {
                 var earnings = JSON.parse(xhr.responseText).earnings;
                 document.getElementById('earnings').innerHTML = formatMoney(earnings);
+                document.getElementById('time').innerHTML = formatTime(elapsed_time);
             };
             xhr.send();
+        }
+
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            var remainingSeconds = Math.round(seconds % 60);
+            return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
         }
 
         function formatMoney(amount) {
@@ -33,6 +40,7 @@
 
     {% if salary %}
     <div>
+        <p>Time: <span id="time">0:00</span></p>
         <p>You have made: <span id="earnings">$0.00</span></p>
     </div>
     {% endif %}
